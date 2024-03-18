@@ -1,7 +1,7 @@
 // import { invoke } from "@tauri-apps/api/tauri";
 import "./App.scss";
-import SudokuGrid from "./components/SudokuGrid";
 import KeyPad from "./components/KeyPad";
+import SudokuGrid from "./components/SudokuGrid";
 
 function App() {
   //   async function greet() {
