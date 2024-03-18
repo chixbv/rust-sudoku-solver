@@ -1,5 +1,5 @@
 const KeyPiece = ({ index }: { index: number }) => (
-  <button className="keypiece">{index}</button>
+  <div className="keypiece"><button >{index}</button></div>
 );
 
 export default KeyPiece;

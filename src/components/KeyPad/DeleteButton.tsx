@@ -1,3 +1,7 @@
-const DeleteButton = () => <button className="keypiece deletebutton">X</button>;
+const DeleteButton = () => (
+  <div className="keypiece deletebutton">
+    <button>X</button>
+  </div>
+);
 
 export default DeleteButton;
