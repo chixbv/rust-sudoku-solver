@@ -63,27 +63,41 @@
           }
         }
         .grid {
+          position: relative;
+          border: 1px solid $light-color;
           cursor: pointer;
           .grid-row {
             display: flex;
             flex-direction: row;
-            &:nth-of-type(3n + 1) div {
-              border-top: 2px solid $light-color;
-            }
-            &:last-of-type div {
-              border-bottom: 2px solid $light-color;
+            &:nth-of-type(4),
+            &:nth-of-type(7) {
+              margin-top: 1px;
             }
             .grid-cell {
-              height: 3rem;
-              width: 3rem;
-              border: 0.8px solid $light-color;
-              line-height: 3rem;
+              height: 48px;
+              width: 48px;
+              line-height: 49px;
               text-align: center;
-              &:nth-of-type(3n + 1) {
-                border-left: 2px solid $light-color;
+              &:nth-of-type(4),
+              &:nth-of-type(7) {
+                margin-left: 1px;
               }
-              &:last-of-type {
-                border-right: 2px solid $light-color;
+            }
+          }
+          svg#svg-container{
+            position: absolute;
+            height: calc(100% + 4px);
+            width: calc(100% + 4px);
+            top: 0;
+            left: 0;
+            #svg-cell-grid {
+              line{
+                stroke: $light-color;
+              }
+            }
+            #svg-cell-outline {
+              rect {
+                stroke: $light-color;
               }
             }
           }
