@@ -5,6 +5,7 @@
   font-weight: 400;
 
   $light-color: #ebdbb2;
+  $muted-light-color: rgba(235,219,178 ,0.5);
   $light-hover-color: #d5c4a1;
   $light-background-color: #282828;
 
@@ -63,27 +64,48 @@
           }
         }
         .grid {
+          position: relative;
           cursor: pointer;
+          border: 2px solid $light-color;
           .grid-row {
             display: flex;
             flex-direction: row;
-            &:nth-of-type(3n + 1) div {
-              border-top: 2px solid $light-color;
+            &:not(:first-of-type) {
+              margin-top: -1px;
             }
-            &:last-of-type div {
-              border-bottom: 2px solid $light-color;
+            &:nth-of-type(3), &:nth-of-type(6) {
+              .grid-cell {
+                border-bottom-width: 2px;
+                border-bottom-color: $light-color;
+              }
             }
             .grid-cell {
-              height: 3rem;
-              width: 3rem;
-              border: 0.8px solid $light-color;
-              line-height: 3rem;
+              position: relative;
+              height: 48px;
+              width: 48px;
+              line-height: 48px;
               text-align: center;
-              &:nth-of-type(3n + 1) {
-                border-left: 2px solid $light-color;
+              border: 1px solid $muted-light-color;
+              &:nth-of-type(3), &:nth-of-type(6) {
+                border-right-width: 2px;
+                border-right-color: $light-color;
               }
-              &:last-of-type {
-                border-right: 2px solid $light-color;
+              &:not(:first-of-type) {
+                margin-left: -1px;
+              }
+              &.focused {
+                outline: 0;
+                &::after {
+                    z-index: 10;
+                    position: absolute;
+                    content: '';
+                    height: 36px;
+                    width: 36px;
+                    top: 0px;
+                    left: 0px;
+                    border-radius: 6px;
+                    border: 6px solid rgba(216, 95, 14, 0.5);
+                  }
               }
             }
           }

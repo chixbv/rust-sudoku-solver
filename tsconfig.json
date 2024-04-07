@@ -18,8 +18,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "src",
+    "paths": {
+      "src/*": ["./src/*"],
+      "utils/*": ["src/utils/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src","vite.config.ts", "src/utils", "**/*.ts", "**/*.tsx",
+    ".eslintrc.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,6 +1,6 @@
 const DeleteButton = () => (
   <div className="keypiece deletebutton">
-    <button>X</button>
+    <button type="button">X</button>
   </div>
 );
 
