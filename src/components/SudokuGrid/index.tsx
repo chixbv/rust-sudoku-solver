@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { DigitContext } from "./DigitContext";
 import Row from "./Row";
@@ -12,16 +12,49 @@ const SudokuGrid = () => {
   const { currentDigits } = context;
 
   const handleClick = (e: React.MouseEvent) => {
-    Array.from(document.querySelectorAll(".grid-cell.focused")).forEach((c) =>
-      c.classList.remove("focused"),
-    );
     if (selectedCell === e.currentTarget) {
       setSelectedCell(undefined);
     } else {
       setSelectedCell(e.currentTarget);
-      e.currentTarget.classList.add("focused");
     }
   };
+
+  useEffect(() => {
+    Array.from(document.querySelectorAll(".grid-cell.focused")).forEach((c) =>
+      c.classList.remove("focused"),
+    );
+    selectedCell?.classList.add("focused");
+  });
+
+  const moveSelectedCell = (key: string) => {
+    const cell = selectedCell as HTMLElement;
+    let [row, col] = [
+      parseInt(cell.dataset.row!, 10),
+      parseInt(cell.dataset.col!, 10),
+    ];
+
+    switch (key) {
+      case "ArrowLeft":
+        col = col === 0 ? 8 : (col -= 1);
+        break;
+      case "ArrowRight":
+        col = col === 8 ? 0 : (col += 1);
+        break;
+      case "ArrowUp":
+        row = row === 0 ? 8 : (row -= 1);
+        break;
+      case "ArrowDown":
+        row = row === 8 ? 0 : (row += 1);
+        break;
+      default:
+        return;
+    }
+    const newCell = document.querySelectorAll(
+      `.grid-cell[data-row="${row}"][data-col="${col}"]`,
+    )[0];
+    setSelectedCell(newCell);
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (!selectedCell) return;
 
@@ -31,10 +64,13 @@ const SudokuGrid = () => {
       parseInt(cell.dataset.col!, 10),
     ];
     const updatedDigits = deepCopyArray(currentDigits);
-    if(isNaN(parseInt(e.key, 10)) && e.key === "Backspace") {
+    if (Number.isNaN(parseInt(e.key, 10)) && e.key === "Backspace") {
       updatedDigits[row][col] = "";
-    } else if(!isNaN(parseInt(e.key, 10))) {
-      updatedDigits[row][col] = e.key
+    } else if (!Number.isNaN(parseInt(e.key, 10))) {
+      updatedDigits[row][col] = e.key;
+    } else if (e.key.match("Arrow")) {
+      moveSelectedCell(e.key);
+      return;
     }
 
     setContext({
