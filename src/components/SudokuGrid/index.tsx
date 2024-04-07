@@ -23,7 +23,7 @@ const SudokuGrid = () => {
     }
   };
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (typeof parseInt(e.key, 10) !== "number" || !selectedCell) return;
+    if (!selectedCell) return;
 
     const cell = selectedCell as HTMLElement;
     const [row, col] = [
@@ -31,7 +31,11 @@ const SudokuGrid = () => {
       parseInt(cell.dataset.col!, 10),
     ];
     const updatedDigits = deepCopyArray(currentDigits);
-    updatedDigits[row][col] = e.key;
+    if(isNaN(parseInt(e.key, 10)) && e.key === "Backspace") {
+      updatedDigits[row][col] = "";
+    } else if(!isNaN(parseInt(e.key, 10))) {
+      updatedDigits[row][col] = e.key
+    }
 
     setContext({
       ...context,
