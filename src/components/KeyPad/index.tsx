@@ -19,7 +19,10 @@ const KeyPad = () => {
     ];
     const buttonClicked = e.currentTarget as HTMLElement;
     const updatedDigits = deepCopyArray(currentDigits);
-    updatedDigits[row][col] = buttonClicked.dataset.value!;
+    updatedDigits[row][col] =
+      buttonClicked.dataset.value === "delete"
+        ? ""
+        : buttonClicked.dataset.value!;
 
     setContext({
       ...context,
@@ -32,7 +35,7 @@ const KeyPad = () => {
         {[...Array(10).keys()].map((i) => (
           <KeyPiece key={i} index={(i + 1) % 10} clickHandler={handleClick} />
         ))}
-        <DeleteButton />
+        <DeleteButton clickHandler={handleClick} />
       </div>
     </div>
   );
