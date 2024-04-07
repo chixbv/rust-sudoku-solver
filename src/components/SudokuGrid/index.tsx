@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 
-import { DigitContext } from "../../contexts/DigitContext";
 import Row from "./Row";
+import { DigitContext } from "../../contexts/DigitContext";
 import { deepCopyArray } from "../../utils/ArrayFunctions";
 
 const SudokuGrid = () => {
@@ -58,7 +58,7 @@ const SudokuGrid = () => {
     setContext({
       ...context,
       selectedCell: newCell as HTMLElement,
-    })
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
