@@ -1,45 +1,55 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+
+import { DigitContext } from "./DigitContext";
 import Row from "./Row";
-import SVGOutline from "./SVGOutline";
-import SVGGrid from "./SVGGrid";
-import SVGHighlightElement from "./SVGHighlightElement";
+import { deepCopyArray } from "../../utils/ArrayFunctions";
 
 const SudokuGrid = () => {
-  const [selectedCoors, setSelectedCoors] = useState<[number, number] | []>([]);
-  const handleClick = (e: React.MouseEvent) => {
-    const cell = document
-      .elementsFromPoint(e.clientX, e.clientY)
-      .filter((el) => el.classList.contains("grid-cell"))[0] as HTMLElement;
-    const cellCoors = cell.getBoundingClientRect();
-    const gridContainerCoors = document.getElementsByClassName("grid")[0].getBoundingClientRect();
-    const coors: [number, number] = [gridContainerCoors.right - cellCoors.right, gridContainerCoors.bottom - cellCoors.bottom];
-    console.log(coors)  
-    setSelectedCoors(coors)
-  };
+  const [selectedCell, setSelectedCell] = useState<Element | undefined>(
+    undefined,
+  );
+  const [context, setContext] = useContext(DigitContext);
+  const { currentDigits } = context;
 
-  const handleKeyPress = () => 2;
+  const handleClick = (e: React.MouseEvent) => {
+    Array.from(document.querySelectorAll(".grid-cell.focused")).forEach((c) =>
+      c.classList.remove("focused"),
+    );
+    if (selectedCell === e.currentTarget) {
+      setSelectedCell(undefined);
+    } else {
+      setSelectedCell(e.currentTarget);
+      e.currentTarget.classList.add("focused");
+    }
+  };
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (typeof parseInt(e.key, 10) !== "number" || !selectedCell) return;
+
+    const cell = selectedCell as HTMLElement;
+    const [row, col] = [
+      parseInt(cell.dataset.row!, 10),
+      parseInt(cell.dataset.col!, 10),
+    ];
+    const updatedDigits = deepCopyArray(currentDigits);
+    updatedDigits[row][col] = e.key;
+
+    setContext({
+      ...context,
+      currentDigits: updatedDigits,
+    });
+  };
 
   return (
     <div
       className="grid"
-      onClick={handleClick}
       onKeyDown={handleKeyPress}
       role="presentation"
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex={0}
     >
-      <div className="test">
       {[...Array(9).keys()].map((i) => (
-        <Row index={i} />
+        <Row key={i} index={i} onClick={handleClick} />
       ))}
-      </div>
-        <svg
-          id="svg-container"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 447, 447"
-        >
-          <SVGGrid />
-          <SVGOutline />
-          <SVGHighlightElement coors={selectedCoors} />
-        </svg>
     </div>
   );
 };

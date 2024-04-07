@@ -5,6 +5,7 @@
   font-weight: 400;
 
   $light-color: #ebdbb2;
+  $muted-light-color: rgba(235,219,178 ,0.5);
   $light-hover-color: #d5c4a1;
   $light-background-color: #282828;
 
@@ -64,40 +65,47 @@
         }
         .grid {
           position: relative;
-          border: 1px solid $light-color;
           cursor: pointer;
+          border: 2px solid $light-color;
           .grid-row {
             display: flex;
             flex-direction: row;
-            &:nth-of-type(4),
-            &:nth-of-type(7) {
-              margin-top: 1px;
+            &:not(:first-of-type) {
+              margin-top: -1px;
+            }
+            &:nth-of-type(3), &:nth-of-type(6) {
+              .grid-cell {
+                border-bottom-width: 2px;
+                border-bottom-color: $light-color;
+              }
             }
             .grid-cell {
+              position: relative;
               height: 48px;
               width: 48px;
-              line-height: 49px;
+              line-height: 48px;
               text-align: center;
-              &:nth-of-type(4),
-              &:nth-of-type(7) {
-                margin-left: 1px;
+              border: 1px solid $muted-light-color;
+              &:nth-of-type(3), &:nth-of-type(6) {
+                border-right-width: 2px;
+                border-right-color: $light-color;
               }
-            }
-          }
-          svg#svg-container{
-            position: absolute;
-            height: calc(100% + 4px);
-            width: calc(100% + 4px);
-            top: 0;
-            left: 0;
-            #svg-cell-grid {
-              line{
-                stroke: $light-color;
+              &:not(:first-of-type) {
+                margin-left: -1px;
               }
-            }
-            #svg-cell-outline {
-              rect {
-                stroke: $light-color;
+              &.focused {
+                outline: 0;
+                &::after {
+                    z-index: 10;
+                    position: absolute;
+                    content: '';
+                    height: 36px;
+                    width: 36px;
+                    top: 0px;
+                    left: 0px;
+                    border-radius: 6px;
+                    border: 6px solid rgba(216, 95, 14, 0.5);
+                  }
               }
             }
           }
