@@ -1,21 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
-import { DigitContext } from "./DigitContext";
 import Row from "./Row";
+import { DigitContext } from "../../contexts/DigitContext";
 import { deepCopyArray } from "../../utils/ArrayFunctions";
 
 const SudokuGrid = () => {
-  const [selectedCell, setSelectedCell] = useState<Element | undefined>(
-    undefined,
-  );
   const [context, setContext] = useContext(DigitContext);
-  const { currentDigits } = context;
+  const { currentDigits, selectedCell } = context;
 
   const handleClick = (e: React.MouseEvent) => {
     if (selectedCell === e.currentTarget) {
-      setSelectedCell(undefined);
+      setContext({
+        ...context,
+        selectedCell: undefined,
+      });
     } else {
-      setSelectedCell(e.currentTarget);
+      setContext({
+        ...context,
+        selectedCell: e.currentTarget as HTMLElement,
+      });
     }
   };
 
@@ -52,7 +55,10 @@ const SudokuGrid = () => {
     const newCell = document.querySelectorAll(
       `.grid-cell[data-row="${row}"][data-col="${col}"]`,
     )[0];
-    setSelectedCell(newCell);
+    setContext({
+      ...context,
+      selectedCell: newCell as HTMLElement,
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

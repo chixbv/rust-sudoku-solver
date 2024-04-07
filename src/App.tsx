@@ -2,7 +2,7 @@
 import "./App.scss";
 import KeyPad from "./components/KeyPad";
 import SudokuGrid from "./components/SudokuGrid";
-import { DigitProvider } from "./components/SudokuGrid/DigitContext";
+import { DigitProvider } from "./contexts/DigitContext";
 
 function App() {
   //   async function greet() {

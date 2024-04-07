@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { DigitContext } from "./DigitContext";
+import { DigitContext } from "../../contexts/DigitContext";
 
 const Cell = ({
   row,
