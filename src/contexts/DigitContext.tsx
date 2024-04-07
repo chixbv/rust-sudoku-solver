@@ -1,9 +1,10 @@
 import { createContext, useMemo, useState } from "react";
 
-import { buildSquareArray } from "../../utils/ArrayFunctions";
+import { buildSquareArray } from "../utils/ArrayFunctions";
 
 interface ContextValuesType {
   currentDigits: Array<Array<string>>;
+  selectedCell?: HTMLElement;
 }
 
 type DigitContextType = [
@@ -13,6 +14,7 @@ type DigitContextType = [
 
 const defaultContext: ContextValuesType = {
   currentDigits: buildSquareArray(9, ""),
+  selectedCell: undefined,
 };
 
 const DigitContext = createContext<DigitContextType>([
