@@ -4,7 +4,7 @@ import { buildSquareArray } from "../utils/ArrayFunctions";
 
 interface ContextValuesType {
   currentDigits: Array<Array<string>>;
-  selectedCell?: HTMLElement;
+  selectedCells: Array<HTMLElement>;
 }
 
 type DigitContextType = [
@@ -14,7 +14,7 @@ type DigitContextType = [
 
 const defaultContext: ContextValuesType = {
   currentDigits: buildSquareArray(9, ""),
-  selectedCell: undefined,
+  selectedCells: [],
 };
 
 const DigitContext = createContext<DigitContextType>([

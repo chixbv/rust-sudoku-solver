@@ -1,36 +1,46 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Row from "./Row";
 import { DigitContext } from "../../contexts/DigitContext";
 import { deepCopyArray } from "../../utils/ArrayFunctions";
 
 const SudokuGrid = () => {
+  const [multipleCellsAllowed, setMultipleCellsAllowed] =
+    useState<Boolean>(false);
   const [context, setContext] = useContext(DigitContext);
-  const { currentDigits, selectedCell } = context;
+  const { currentDigits, selectedCells } = context;
+  const multipleCellsKeys = ["Shift", "Meta", "Control"];
 
   const handleClick = (e: React.MouseEvent) => {
-    if (selectedCell === e.currentTarget) {
-      setContext({
-        ...context,
-        selectedCell: undefined,
-      });
+    let updatedCells;
+    if (multipleCellsAllowed) {
+      if (selectedCells.includes(e.currentTarget as HTMLElement)) {
+        updatedCells = selectedCells.filter((cell) => cell !== e.currentTarget);
+      } else {
+        updatedCells = [...selectedCells, e.currentTarget as HTMLElement];
+      }
+    } else if (selectedCells.includes(e.currentTarget as HTMLElement)) {
+      updatedCells = [e.currentTarget as HTMLElement];
     } else {
-      setContext({
-        ...context,
-        selectedCell: e.currentTarget as HTMLElement,
-      });
+      updatedCells = [] as HTMLElement[];
     }
+    setContext({
+      ...context,
+      selectedCells: updatedCells,
+    });
   };
 
   useEffect(() => {
     Array.from(document.querySelectorAll(".grid-cell.focused")).forEach((c) =>
       c.classList.remove("focused"),
     );
-    selectedCell?.classList.add("focused");
+    selectedCells.forEach((cell) => {
+      cell.classList.add("focused");
+    });
   });
 
   const moveSelectedCell = (key: string) => {
-    const cell = selectedCell as HTMLElement;
+    const cell = selectedCells[0] as HTMLElement;
     let [row, col] = [
       parseInt(cell.dataset.row!, 10),
       parseInt(cell.dataset.col!, 10),
@@ -57,25 +67,37 @@ const SudokuGrid = () => {
     )[0];
     setContext({
       ...context,
-      selectedCell: newCell as HTMLElement,
+      selectedCells: [...selectedCells, newCell as HTMLElement],
     });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (!selectedCell) return;
+    if (multipleCellsKeys.includes(e.key)) {
+      setMultipleCellsAllowed(true);
+      return;
+    }
 
-    const cell = selectedCell as HTMLElement;
-    const [row, col] = [
-      parseInt(cell.dataset.row!, 10),
-      parseInt(cell.dataset.col!, 10),
-    ];
+    if (!selectedCells.length) return;
+
     const updatedDigits = deepCopyArray(currentDigits);
+    let row;
+    let col;
     if (Number.isNaN(parseInt(e.key, 10)) && e.key === "Backspace") {
-      updatedDigits[row][col] = "";
+      selectedCells.forEach((cell) => {
+        row = parseInt(cell.dataset.row!, 10);
+        col = parseInt(cell.dataset.col!, 10);
+      });
+      updatedDigits[row!][col!] = "";
     } else if (!Number.isNaN(parseInt(e.key, 10))) {
-      updatedDigits[row][col] = e.key;
+      selectedCells.forEach((cell) => {
+        row = parseInt(cell.dataset.row!, 10);
+        col = parseInt(cell.dataset.col!, 10);
+      });
+      updatedDigits[row!][col!] = e.key;
     } else if (e.key.match("Arrow")) {
       moveSelectedCell(e.key);
+      return;
+    } else {
       return;
     }
 
@@ -85,10 +107,17 @@ const SudokuGrid = () => {
     });
   };
 
+  const handleKeyRelease = (e: React.KeyboardEvent) => {
+    if (multipleCellsKeys.includes(e.key)) {
+      setMultipleCellsAllowed(false);
+    }
+  };
+
   return (
     <div
       className="grid"
       onKeyDown={handleKeyPress}
+      onKeyUp={handleKeyRelease}
       role="presentation"
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}

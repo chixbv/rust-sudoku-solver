@@ -7,22 +7,24 @@ import { deepCopyArray } from "../../utils/ArrayFunctions";
 
 const KeyPad = () => {
   const [context, setContext] = useContext(DigitContext);
-  const { currentDigits, selectedCell } = context;
+  const { currentDigits, selectedCells } = context;
 
   const handleClick = (e: React.MouseEvent) => {
-    if (!selectedCell) return;
+    if (!selectedCells) return;
 
-    const cell = selectedCell as HTMLElement;
-    const [row, col] = [
-      parseInt(cell.dataset.row!, 10),
-      parseInt(cell.dataset.col!, 10),
-    ];
     const buttonClicked = e.currentTarget as HTMLElement;
     const updatedDigits = deepCopyArray(currentDigits);
-    updatedDigits[row][col] =
-      buttonClicked.dataset.value === "delete"
-        ? ""
-        : buttonClicked.dataset.value!;
+
+    selectedCells.forEach((cell) => {
+      const [row, col] = [
+        parseInt(cell.dataset.row!, 10),
+        parseInt(cell.dataset.col!, 10),
+      ];
+      updatedDigits[row][col] =
+        buttonClicked.dataset.value === "delete"
+          ? ""
+          : buttonClicked.dataset.value!;
+    });
 
     setContext({
       ...context,
